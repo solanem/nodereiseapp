@@ -6,7 +6,7 @@ import { HttpError } from "express-openapi-validator/dist/framework/types";
 import AuthService from "./services/AuthService";
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 const expenseService = new ExpenseService();
 const authService = new AuthService();
