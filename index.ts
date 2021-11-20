@@ -86,7 +86,11 @@ app.post("/login", async (req, res) => {
     res.status(401);
     return res.json({ message: "Bad email or password" });
   }
-  res.cookie("session", sessionId, { maxAge: 60 * 60 * 1000, httpOnly: true });
+  res.cookie("session", sessionId, {
+    maxAge: 60 * 60 * 1000,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+  });
   res.json({ status: "ok" });
 });
 
