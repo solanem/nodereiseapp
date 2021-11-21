@@ -1,8 +1,5 @@
 import crypto from "crypto";
-import config from "../knexfile";
-import { knex as knexDriver } from "knex";
-
-const knex = knexDriver(config);
+import { Knex } from "knex";
 
 type Expense = {
   date: Date;
@@ -16,26 +13,33 @@ type SavedExpense = Expense & {
 
 class ExpenseService {
   expenses: SavedExpense[] = [];
+  private knex: Knex;
+
+  constructor(knex: Knex) {
+    this.knex = knex;
+  }
 
   async add(expense: Expense): Promise<SavedExpense> {
     const newExpense = {
       ...expense,
       id: crypto.randomUUID(),
     };
-    await knex("expenses").insert(newExpense);
+    await this.knex("expenses").insert(newExpense);
     return newExpense;
   }
 
   async delete(uuid: string): Promise<void> {
-    await knex("expeses").where({ id: uuid }).delete();
+    await this.knex("expeses").where({ id: uuid }).delete();
   }
 
   async getAll(): Promise<Expense[]> {
-    return knex("expenses");
+    return this.knex("expenses");
   }
 
   async getTotal(): Promise<number> {
-    const response = await knex<SavedExpense>("expenses").sum("value").first();
+    const response = await this.knex<SavedExpense>("expenses")
+      .sum("value")
+      .first();
     return response?.sum || 0;
   }
 }

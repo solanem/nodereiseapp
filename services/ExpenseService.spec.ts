@@ -6,10 +6,11 @@ import ExpenseService from "./ExpenseService";
 
 describe("ExpenseService", () => {
   const tracker = mockKnex.getTracker();
-  const service = new ExpenseService();
+  let service: ExpenseService;
 
   beforeAll(() => {
     const knex = knexDriver(config);
+    service = new ExpenseService(knex);
     mockKnex.mock(knex);
     tracker.install();
   });
