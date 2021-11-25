@@ -5,6 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "test": "jest",
+    "test:api": "jest api-tests/",
     "postinstall": "tsc",
     "start": " ts-node-dev index.ts",
     "build": "tsc",
@@ -45,5 +46,13 @@
   },
   "engines": {
     "node": "16.x"
+  },
+  "jest": {
+    "verbose": true,
+    "testPathIgnorePatterns": ["/node_modules/", "/build/", "/api-tests/"],
+    "collectCoverageFrom": [
+      "services/*.ts",
+      "index.ts"
+    ]
   }
 }
