@@ -32,6 +32,10 @@ class AuthService {
     });
   }
 
+  async delete(email: string): Promise<void> {
+    await knex("users").where({email}).delete()
+  }
+
   async checkPassword(email: string, password: string): Promise<boolean> {
     const dbUser = await knex<User>("users").where({ email }).first();
     if (!dbUser) {
