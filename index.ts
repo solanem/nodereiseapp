@@ -5,6 +5,7 @@ import * as OpenApiValidator from "express-openapi-validator";
 import { HttpError } from "express-openapi-validator/dist/framework/types";
 import AuthService from "./services/AuthService";
 import { knex as knexDriver } from "knex";
+import cors from "cors";
 import config from "./knexfile";
 
 const app = express();
@@ -13,6 +14,8 @@ const port = process.env.PORT || 3000;
 const knex = knexDriver(config);
 const expenseService = new ExpenseService(knex);
 const authService = new AuthService();
+
+app.use(cors({ origin: "*" }));
 
 app.use(express.json());
 app.use(cookieParser());
@@ -24,12 +27,6 @@ app.use(
     validateResponses: false,
   })
 );
-
-// Enable CORS
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  next();
-});
 
 const checkLogin = async (
   req: Request,
