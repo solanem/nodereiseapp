@@ -15,7 +15,7 @@ const knex = knexDriver(config);
 const expenseService = new ExpenseService(knex);
 const authService = new AuthService();
 
-app.use(cors({ origin: "*" }));
+app.use(cors({ origin: true }));
 
 app.use(express.json());
 app.use(cookieParser());
