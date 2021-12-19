@@ -1,128 +1,173 @@
 openapi: 3.0.1
 info:
-  title: Expense Tracker
-  description: This is the Expense Tracking API
+  description: A simple backend which saves user and the journey the user had made
   version: 1.0.0
-externalDocs:
-  description: Github
-  url: http://github.com/example
-servers:
-  - url: https://expense-tracker.herokuapp.com/
+  title: Node Reise App
+host: https://nodereiseapp.herokuapp.com/
+basePath: /
 tags:
-  - name: expense
-    description: Everything about your expenses
+  - name: journeys
+    description: List of journeys
+  - name: journey
+    description: Simple journey
+  - name: login
+    description: a user can login to the website
+
+schemes:
+  - https
+  - http
 
 paths:
-  /expenses:
+  /journeys:
     get:
       tags:
-        - expense
-      summary: Get all expenses
+        - journeys
+      summary: returns all journes of a user
+      description: returns json with multiple journey data sets
+      produces:
+        - application/json
       responses:
-        "200":
-          description: Invalid ID supplied
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SavedExpense'
+        '200':
+          description: successful operation
+          schema:
+            type: array
+        '400':
+          description: Invalid status value
+
+  /journey:
     post:
       tags:
-        - expense
-      summary: Add a new expense
-      requestBody:
-        description: Pet object that needs to be added to the store
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Expense'
-        required: true
+        - journey
+      summary: add single journey of a user
+      description: journey holds all data which is needed
+        to process the visualisation of a journey
+      operationId: name
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: query
+          description: id as primary key for db
+          required: true
+          type: string
+          collectionFormat: single
+        - name: name
+          in: query
+          description: name of the yourney
+          required: true
+          type: string
+          collectionFormat: single
+        - name: country
+          in: query
+          description: country of the journey
+          required: true
+          type: string
+          collectionFormat: single
+        - name: startDdate
+          in: query
+          description: startDate of the journey
+          required: true
+          type: Date
+          collectionFormat: single
+        - name: enddate
+          in: query
+          description: endDate of the journey
+          required: true
+          type: Date
+          collectionFormat: single
       responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SavedExpense'
-
-  /expenses/{uuid}:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+        '400':
+          description: Invalid value
+      deprecated: false
+    put:
+      tags:
+        - journey
+      summary: change a single journey of a user
+      description: journey holds all data which is needed
+        to process the visualisation of a journey
+      operationId: name
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: query
+          description: id as primary key for db
+          required: true
+          type: string
+          collectionFormat: single
+        - name: name
+          in: query
+          description: name of the yourney
+          required: true
+          type: string
+          collectionFormat: single
+        - name: country
+          in: query
+          description: country of the journey
+          required: true
+          type: string
+          collectionFormat: single
+        - name: startDdate
+          in: query
+          description: startDate of the journey
+          required: true
+          type: Date
+          collectionFormat: single
+        - name: enddate
+          in: query
+          description: endDate of the journey
+          required: true
+          type: Date
+          collectionFormat: single
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+        '400':
+          description: Invalid value
+      deprecated: false
     delete:
       tags:
-        - expense
-      summary: Deletes an expense by uuid
+        - journey
+      summary: Deletes a journey
+      description: ''
+      operationId: id
+      produces:
+        - application/json
       parameters:
-        - in: path
-          name: uuid
-          schema:
-            type: string
-            format: uuid
+        - name: journey
+          in: body
           required: true
-          description: uuid of the entry to delete
+          type: journey
+          description: jounrey which should be deleted
+          required: true
       responses:
-        "204":
-          description: successful operation
-
-  /summary:
-    get:
-      tags:
-        - summary
-      summary: Get a summary of all expenses
-      responses:
-        "200":
-          description: Successfull request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Summary'
-
+        '400':
+          description: Invalid journey supplied
+        '404':
+          description: journey not found
   /login:
     post:
       tags:
         - login
-      summary: Log in and get cookie for authentication
+      summary: login for a user
+      description: ''
+      operationId: ''
+      consumes:
+        - body
+      produces:
+        - application/json
+      parameters:
+        - name: payload
+          in: body
+          description: paylod with login data
+          required: true
       responses:
-        "200":
-          description: Successfull request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Login'
+        '200':
+          description: successful operation
 
-components:
-  schemas:
-    Expense:
-      type: object
-      properties:
-        name:
-          type: string
-        date:
-          type: string
-          format: date-time
-        value:
-          type: integer
-          format: int32
-    SavedExpense:
-      allOf:
-        - $ref: '#/components/schemas/Expense'
-        - type: object
-          required:
-            - id
-          properties:
-            id:
-              type: string
-              format: uuid
-    Summary:
-      type: object
-      properties:
-        value:
-          type: integer
-          format: int32
-    Login:
-      type: object
-      properties:
-        email:
-          type: string
-          format: email
-        password:
-          type: string

@@ -1,6 +1,5 @@
 import express, { Request } from "express";
 import cookieParser from "cookie-parser";
-import ExpenseService from "./services/ExpenseService";
 import * as OpenApiValidator from "express-openapi-validator";
 import { HttpError } from "express-openapi-validator/dist/framework/types";
 import AuthService from "./services/AuthService";
@@ -13,7 +12,6 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 const knex = knexDriver(config);
-const expenseService = new ExpenseService(knex);
 const authService = new AuthService();
 const journeyService = new JourneyService(knex);
 
@@ -70,28 +68,6 @@ app.use(
   }
 );
 
-app.post("/expenses", checkLogin, (req, res) => {
-  const payload = req.body;
-  expenseService.add(payload).then((newEntry) => res.send(newEntry));
-});
-
-app.delete("/expenses/:expenseId", checkLogin, (req, res) => {
-  const id = req.params.expenseId;
-  expenseService.delete(id).then(() => {
-    res.status(204);
-    res.send();
-  });
-});
-
-app.get("/expenses", checkLogin, (req, res) => {
-  expenseService.getAll().then((total) => res.send(total));
-});
-
-app.get("/summary", checkLogin, async (req, res) => {
-  const total = await expenseService.getTotal();
-  res.json({ value: total });
-});
-
 app.get("/journeys", checkLogin, async (req, res) => {
   const journeys = await journeyService.getAllJourneys();
   res.json({journeys});
@@ -102,7 +78,7 @@ app.post("/journey", checkLogin, async (req, res) => {
   const journeys = await journeyService.addJourney(journey).then((newEntry) => res.send(newEntry));
 });
 
-app.patch("/journey", checkLogin, async (req, res) => {
+app.put("/journey", checkLogin, async (req, res) => {
   const journey = req.body;
   const journeys = await journeyService.editJourney(journey).then((newEntry) => res.send(newEntry));
 });
