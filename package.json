@@ -23,11 +23,13 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-openapi-validator": "^4.13.2",
+    "heroku": "^7.59.2",
     "knex": "^0.95.13",
     "pg": "^8.7.1",
     "prompt": "^1.2.0",
     "redis": "^4.0.0-rc.3",
-    "supertest": "^6.1.6"
+    "supertest": "^6.1.6",
+    "yarn": "^1.22.17"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.16.4",
