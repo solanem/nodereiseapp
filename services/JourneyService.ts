@@ -20,8 +20,10 @@ class JourneyService {
         this.knex = knex;
     }
 
-    async getAllJourneys(): Promise<Journey[]>{
+    async getAllJourneys(username: string): Promise<Journey[]>{
         return this.knex("journeys");
+        //Todo add username to journey table for the reference to the user
+        //return this.knex("journeys").where(username: username);
     }
 
     async addJourney(journey: Journey): Promise<SavedJourney> {

@@ -69,7 +69,8 @@ app.use(
 );
 
 app.get("/journeys", checkLogin, async (req, res) => {
-  const journeys = await journeyService.getAllJourneys();
+  const userData = req.body;
+  const journeys = await journeyService.getAllJourneys(userData);
   res.json({journeys});
 });
 
