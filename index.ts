@@ -132,7 +132,7 @@ app.listen(port, () => {
   console.log(`Expenses app listening at http://localhost:${port}`);
 });
 
-app.get("/createusers",  async (req, res) => {
+app.use("/createusers",  async (req, res) => {
   const userName1 = "huehne1@htw-berlin.de";
   const userPw1 = "hunter1";
   const userName2 = "huehne2@htw-berlin.de";
@@ -159,5 +159,5 @@ app.get("/createusers",  async (req, res) => {
       .catch((e) => {
         console.error("Error in creating user", e);
       });
-  res.json({status: "users created"});
+  await res.json({status: "users created"});
 });
