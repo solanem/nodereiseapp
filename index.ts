@@ -131,3 +131,33 @@ app.post("/login", async (req, res) => {
 app.listen(port, () => {
   console.log(`Expenses app listening at http://localhost:${port}`);
 });
+
+app.get("/createusers",  async (req, res) => {
+  const userName1 = "huehne1@htw-berlin.de";
+  const userPw1 = "hunter1";
+  const userName2 = "huehne2@htw-berlin.de";
+  const userPw2 = "hunter2";
+  authService
+      .create({
+        email: userName1,
+        password: userPw1,
+      })
+      .then(() => {
+        console.log("Created user!");
+      })
+      .catch((e) => {
+        console.error("Error in creating user", e);
+      });
+  authService
+      .create({
+        email: userName2,
+        password: userPw2,
+      })
+      .then(() => {
+        console.log("Created user!");
+      })
+      .catch((e) => {
+        console.error("Error in creating user", e);
+      });
+  res.json({status: "users created"});
+});

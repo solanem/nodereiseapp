@@ -25,12 +25,12 @@ class JourneyService {
     }
 
     async addJourney(journey: Journey): Promise<SavedJourney> {
-        const newExpense = {
+        const newJourney = {
             ...journey,
             id: crypto.randomUUID(),
         };
-        await this.knex("journeys").insert(newExpense);
-        return newExpense;
+        await this.knex("journeys").insert(newJourney);
+        return newJourney;
     }
 
     async editJourney(journey: Journey): Promise<void> {
