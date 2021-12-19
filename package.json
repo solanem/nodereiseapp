@@ -24,10 +24,10 @@
     "express": "^4.17.1",
     "express-openapi-validator": "^4.13.2",
     "heroku": "^7.59.2",
-    "knex": "^0.95.13",
+    "knex": "^0.95.14",
     "pg": "^8.7.1",
     "prompt": "^1.2.0",
-    "redis": "^4.0.0-rc.3",
+    "redis": "^3.1.2",
     "supertest": "^6.1.6",
     "yarn": "^1.22.17"
   },
