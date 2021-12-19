@@ -7,6 +7,7 @@ import AuthService from "./services/AuthService";
 import { knex as knexDriver } from "knex";
 import cors from "cors";
 import config from "./knexfile";
+import JourneyService from "./services/JourneyService";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -14,6 +15,7 @@ const port = process.env.PORT || 3000;
 const knex = knexDriver(config);
 const expenseService = new ExpenseService(knex);
 const authService = new AuthService();
+const journeyService = new JourneyService(knex);
 
 app.use(
   cors({
@@ -88,6 +90,26 @@ app.get("/expenses", checkLogin, (req, res) => {
 app.get("/summary", checkLogin, async (req, res) => {
   const total = await expenseService.getTotal();
   res.json({ value: total });
+});
+
+app.get("/journeys", checkLogin, async (req, res) => {
+  const journeys = await journeyService.getAllJourneys();
+  res.json({journeys});
+});
+
+app.post("/journey", checkLogin, async (req, res) => {
+  const journey = req.body;
+  const journeys = await journeyService.addJourney(journey).then((newEntry) => res.send(newEntry));
+});
+
+app.patch("/journey", checkLogin, async (req, res) => {
+  const journey = req.body;
+  const journeys = await journeyService.editJourney(journey).then((newEntry) => res.send(newEntry));
+});
+
+app.delete("/journey", checkLogin, async (req, res) => {
+  const journey = req.body;
+  const journeys = await journeyService.deleteJourney(journey).then((newEntry) => res.send(newEntry));
 });
 
 app.post("/login", async (req, res) => {
