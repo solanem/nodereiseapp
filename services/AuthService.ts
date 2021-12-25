@@ -1,3 +1,4 @@
+/*
 import config from "../knexfile";
 import bcrypt from "bcrypt";
 import Knex from "knex";
@@ -62,34 +63,35 @@ class AuthService {
     return undefined;
   }
 
+  // hier wird redis gefragt obs die seccion id existiert
   public async getUserEmailForSession(
       sessionId: string
-  ): Promise<string | null> {
+  ): Promise<string | null> { //string if emailadresse existiert ansonsten null
     return getAsync(sessionId);
   }
 }
 
 export default AuthService;
-/*
+*/
+
+
 import config from "../knexfile";
 
 import bcrypt from "bcrypt";
 import Knex from "knex";
 
-import { createClient } from "redis";
 import crypto from "crypto";
 
-const client = createClient({
-  url: process.env.REDIS_URL,
-});
-client.on("error", (err) => console.log("Redis Client Error", err));
-client.on("connect", () => console.log("Successfully connected to redis"));
-
-(async () => {
-  await client.connect();
-})();
 
 const knex = Knex(config);
+
+const getUserForId = (sessionId: string) => {
+  return "";
+}
+
+const setSessionId = (sessionId: string, email: string) => {
+
+}
 
 interface User {
   email: string;
@@ -125,7 +127,7 @@ class AuthService {
     const correctPassword = await this.checkPassword(email, password);
     if (correctPassword) {
       const sessionId = crypto.randomUUID();
-      await client.set(sessionId, email, { EX: 60 });
+      await setSessionId(sessionId, email);
       return sessionId;
     }
     return undefined;
@@ -134,9 +136,8 @@ class AuthService {
   public async getUserEmailForSession(
     sessionId: string
   ): Promise<string | null> {
-    return client.get(sessionId);
+    return getUserForId(sessionId);
   }
 }
 
 export default AuthService;
-*/

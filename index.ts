@@ -43,12 +43,12 @@ const checkLogin = async (
     res.status(401);
     return res.json({ message: "You need to be logged in to see this page." });
   }
-  const email = await authService.getUserEmailForSession(session);
+  const email = await authService.getUserEmailForSession(session); // prüft über redis ob untersession id eine emailadresse gespeichert ist
   if (!email) {
     res.status(401);
     return res.json({ message: "You need to be logged in to see this page." });
   }
-  req.userEmail = email;
+  req.userEmail = email; //wird ins req geschrieben um zu wissenwelcher user eingeloggt ist
 
   next();
 };
@@ -96,6 +96,7 @@ app.post("/login", async (req, res) => {
     res.status(401);
     return res.json({ message: "Bad email or password" });
   }
+  //hier wird der cookie erstellt
   res.cookie("session", sessionId, {
     maxAge: 60 * 60 * 1000,
     httpOnly: true,
