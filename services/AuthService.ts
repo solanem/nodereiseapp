@@ -85,17 +85,18 @@ import crypto from "crypto";
 
 const knex = Knex(config);
 
-const getUserForId = (sessionId: string) => {
-  return "";
-}
 
-const setSessionId = (sessionId: string, email: string) => {
-
-}
+const sessionDurationTime = 60;
 
 interface User {
   email: string;
   password: string;
+}
+
+interface sessionRow{
+  email: string,
+  sessionId: string,
+  createdAt: string
 }
 
 class AuthService {
@@ -127,8 +128,8 @@ class AuthService {
     const correctPassword = await this.checkPassword(email, password);
     if (correctPassword) {
       const sessionId = crypto.randomUUID();
-      await setSessionId(sessionId, email);
-      return sessionId;
+      const isSet = await this.setSessionId(sessionId, email);
+      if(isSet) return sessionId; //todo check for problems!!!
     }
     return undefined;
   }
@@ -136,7 +137,32 @@ class AuthService {
   public async getUserEmailForSession(
     sessionId: string
   ): Promise<string | null> {
-    return getUserForId(sessionId);
+    return this.getUserForId(sessionId);
+  }
+
+  async getUserForId(id: string): Promise<string>{
+   // const email = knex("sessionIds").where({sessionId: id}).select('email');
+    const sessionData = await knex.select('email', 'createdAt').from("sessionIds").where({sessionId: id}).first();
+    const email = sessionData.first.arguments.email;
+    const date = sessionData.first.arguments.createdAt.toDateString();
+
+    if(!email) return email;
+    const currentTime = new Date();
+    if(date.getMinutes() - currentTime.getMinutes() >= sessionDurationTime){
+      await knex("sessionIds").where({sessionId: id}).delete();
+      return "";
+    }
+    return email;
+  }
+
+  async setSessionId(sessionId: string, email: string): Promise<boolean>{
+    //check if id or email already in use;
+    const idData = await knex('sessionIds').where({sessionId: sessionId}).first();
+    const emailData = await knex('sessionIds').where({sessionId: sessionId}).first();
+    if(!idData.first.arguments.email || !emailData.first.arguments.email) return false;
+    const date = new Date().toDateString();
+    await knex('sessionIds').insert({email: email, sessionId: sessionId, createdAt: date});
+    return true;
   }
 }
 
